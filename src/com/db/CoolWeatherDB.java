@@ -50,10 +50,10 @@ public class CoolWeatherDB {
 	}
 
 	// 从数据库中读取某省下所有的城市信息
-	public List<City> loadCities(String provinceName) {
+	public List<City> loadCities(int provinceId) {
 		List<City> list = new ArrayList<City>();
-		Cursor cursor = db.query("City", null, "province_name = ?",
-				new String[] { provinceName }, null, null, null);
+		Cursor cursor = db.query("City", null, "province_id = ?",
+				new String[] { provinceId+"" }, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				City city = new City();
