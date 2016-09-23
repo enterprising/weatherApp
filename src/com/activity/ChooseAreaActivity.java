@@ -13,6 +13,7 @@ import com.util.CityPullParse;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,15 +37,10 @@ public class ChooseAreaActivity extends Activity {
 	private CoolWeatherDB coolWeatherDB;
 	private List<String> dataList = new ArrayList<String>();
 
-	// 省列表
 	private List<Province> provinceList;
-	// 城市列表
 	private List<City> cityList;
-	// 选中的省份
 	private Province selectedProvince;
-	// 选中的城市
 	private City selectedCity;
-	// 当前选中的级别
 	private int currentLevel;
 
 	private boolean flag;
@@ -73,15 +69,17 @@ public class ChooseAreaActivity extends Activity {
 					queryCities();
 				} else if (currentLevel == LEAVEL_CITY) {
 					selectedCity = cityList.get(index);
+					String cityName = selectedCity.getCityName();
+					Intent intent = new Intent(ChooseAreaActivity.this,WeatherActivity.class);
+					intent.putExtra("cityName",cityName);
+					startActivity(intent);
+					finish();
 				}
 			}
 		});
 		queryProvince();
 	}
 
-	/**
-	 * 查询全国所有的省份，优先从数据库查，没有再去XML文件里面读取
-	 */
 	private void queryProvince() {
 		provinceList = coolWeatherDB.loadProvinces();
 		if (provinceList.size() > 0) {
@@ -89,11 +87,10 @@ public class ChooseAreaActivity extends Activity {
 			for (Province province : provinceList) {
 				dataList.add(province.getProvinceName());
 			}
-			// 有时候我们需要修改已经生成的列表，添加或者修改数据，
-			// notifyDataSetChanged()可以在修改适配器绑定的数组后，不用重新刷新Activity，通知Activity更新ListView
+			// notifyDataSetChanged()
 			adapter.notifyDataSetChanged();
 			listView.setSelection(0);
-			titleText.setText("中国");
+			titleText.setText("涓浗");
 			currentLevel = LEAVEL_PROVINCE;
 		} else {
 			queryFromXml();
@@ -107,9 +104,6 @@ public class ChooseAreaActivity extends Activity {
 		getcity();
 	}
 
-	/**
-	 * 查询选中省份内所有的市。肯定已经存在数据库里面了，所以不用重新解析xml文件
-	 */
 	private void queryCities() {
 		cityList = coolWeatherDB.loadCities(selectedProvince.getId());
 		if (cityList.size() > 0) {
@@ -127,15 +121,6 @@ public class ChooseAreaActivity extends Activity {
 		coolWeatherDB = CoolWeatherDB.getInstance(this);
 		provinceandcityParser = getXMLFromResXml(fileName);
 		flag = CityPullParse.ParseXml(provinceandcityParser, coolWeatherDB);
-		// cityArray = CityPullParse.Parse(getInputStreamFromAssets(fileName));
-		/*
-		 * for (City city : cityArray) { String provinceName = ""; int
-		 * provinceid = city.getProvinceId(); cityStr += "省份ID[" +
-		 * city.getProvinceId() + "],省份name[" + city.getProvinceName() +
-		 * "],城市ID[" + city.getId() + "], " + city.getCityName() + "\n"; }
-		 */
-		textview.setText(flag + "");
-		Log.d("这里是getcity", "获取信息成功！");
 	}
 
 	public XmlResourceParser getXMLFromResXml(String fileName) {
@@ -149,9 +134,6 @@ public class ChooseAreaActivity extends Activity {
 		return xmlParser;
 	}
 
-	/**
-	 * 从assets中读取文件到InputStream中
-	 */
 	public InputStream getInputStreamFromAssets(String fileName) {
 		try {
 			InputStream inputStream = getResources().getAssets().open(fileName);
@@ -162,31 +144,21 @@ public class ChooseAreaActivity extends Activity {
 		return null;
 	}
 
-	/**
-	 * 显示进度对话框
-	 */
 	private void showProgressDialog() {
 		if (progressDialog == null) {
 			progressDialog = new ProgressDialog(this);
-			progressDialog.setMessage("正在拼了命的加载..");
+			progressDialog.setMessage("姝ｅ湪鍔犺浇..");
 			progressDialog.setCanceledOnTouchOutside(false);
 
 		}
 		progressDialog.show();
 	}
-
-	/**
-	 * 关闭进度对话框
-	 */
 	private void closeProgressDialog() {
 		if (progressDialog != null) {
 			progressDialog.dismiss();
 		}
 	}
 
-	/**
-	 * 获取back键，根据当前级别来判断，此时应该返回到市列表、省列表还是直接退出
-	 */
 	@Override
 	public void onBackPressed() {
 		if (currentLevel == LEAVEL_CITY) {

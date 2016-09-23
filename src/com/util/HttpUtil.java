@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.util.Log;
+
 public class HttpUtil {
 
 	public static void sendHttpRequest(final String address,
@@ -24,7 +26,7 @@ public class HttpUtil {
 					connection.setConnectTimeout(8000);
 					connection.setDoInput(true);
 					connection.setDoOutput(true);
-					InputStream in = connection.getInputStream(); // »ñÈ¡·þÎñÆ÷·µ»ØµÄÊäÈëÁ÷
+					InputStream in = connection.getInputStream(); // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					BufferedReader reader = new BufferedReader(
 							new InputStreamReader(in));
 					response = new StringBuilder();
@@ -33,7 +35,7 @@ public class HttpUtil {
 						response.append(line);
 					}
 					if (listener != null) {
-						// »Øµ÷onfinish·½·¨
+						//Log.d("xml", response.toString());
 						listener.onFinish(response.toString());
 					}
 				} catch (Exception e) {

@@ -45,12 +45,11 @@ public class CityActivity extends Activity implements OnClickListener {
 		// cityArray = CityPullParse.Parse(getInputStreamFromAssets(fileName));
 		/*
 		 * for (City city : cityArray) { String provinceName = ""; int
-		 * provinceid = city.getProvinceId(); cityStr += "省份ID[" +
-		 * city.getProvinceId() + "],省份name[" + city.getProvinceName() +
-		 * "],城市ID[" + city.getId() + "], " + city.getCityName() + "\n"; }
+		 * provinceid = city.getProvinceId(); cityStr += "省锟斤拷ID[" +
+		 * city.getProvinceId() + "],省锟斤拷name[" + city.getProvinceName() +
+		 * "],锟斤拷锟斤拷ID[" + city.getId() + "], " + city.getCityName() + "\n"; }
 		 */
 		textview.setText(flag + "");
-		Log.d("这里是getcity","获取信息成功！");
 	}
 
 	public XmlResourceParser getXMLFromResXml(String fileName) {
@@ -65,7 +64,7 @@ public class CityActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * 从assets中读取文件到InputStream中
+	 * 锟斤拷assets锟叫讹拷取锟侥硷拷锟斤拷InputStream锟斤拷
 	 */
 	public InputStream getInputStreamFromAssets(String fileName) {
 		try {
@@ -82,9 +81,7 @@ public class CityActivity extends Activity implements OnClickListener {
 		CoolWeatherOpenHelper dbHelper = new CoolWeatherOpenHelper(this,
 				"CoolWeather8.db", null, 2);
 		if (v.getId() == R.id.btn_getcity) {
-			// Toast.makeText(this, "创建表成功！", Toast.LENGTH_LONG).show();
 			System.out.println(this);
-			Log.d("This是什么", this + "");
 			dbHelper.getWritableDatabase();
 			getcity();
 		}

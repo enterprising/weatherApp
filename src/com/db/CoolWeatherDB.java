@@ -8,13 +8,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.webkit.WebChromeClient.CustomViewCallback;
 
 import com.pojo.City;
 import com.pojo.Province;
 
 /**
- * Õâ¸öÀàÓÃÓÚ°ÑÒ»Ð©³£ÓÃµÄÊý¾Ý¿â²Ù×÷·â×°ÆðÀ´ ÒÔ·½±ãÒÔºóµÄÊ¹ÓÃ
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú°ï¿½Ò»Ð©ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½×°ï¿½ï¿½4 ï¿½Ô·ï¿½ï¿½ï¿½ï¿½Ôºï¿½ï¿½Ê¹ï¿½ï¿½
  * 
  * @author pengTan
  */
@@ -24,14 +23,14 @@ public class CoolWeatherDB {
 	private static CoolWeatherDB coolWeatherDB;
 	private SQLiteDatabase db;
 
-	// ½«¹¹Ôì·½·¨Ë½ÓÐ»¯
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ì·½ï¿½ï¿½Ë½ï¿½Ð»ï¿½
 	private CoolWeatherDB(Context context) {
 		CoolWeatherOpenHelper dbHelper = new CoolWeatherOpenHelper(context,
 				DB_NAME, null, VERSION);
 		db = dbHelper.getWritableDatabase();
 	}
 
-	// »ñÈ¡CoolWeatherDBµÄÊµÀý
+	// ï¿½ï¿½È¡CoolWeatherDBï¿½ï¿½Êµï¿½ï¿½
 	public synchronized static CoolWeatherDB getInstance(Context context) {
 		if (coolWeatherDB == null) {
 			coolWeatherDB = new CoolWeatherDB(context);
@@ -39,17 +38,17 @@ public class CoolWeatherDB {
 		return coolWeatherDB;
 	}
 
-	// ½«cityÊµÀý´æ´¢µ½Êý¾Ý¿â
+	// ï¿½ï¿½cityÊµï¿½ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½
 	public void saveCity(City city) {
 		if (city != null) {
 			ContentValues values = new ContentValues();
 			values.put("city_name", city.getCityName());
 			values.put("province_id", city.getProvinceId());
-			db.insert("City", null, values); // ²åÈëµ½Êý¾Ý¿âÖÐ
+			db.insert("City", null, values); // ï¿½ï¿½ï¿½ëµ½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½
 		}
 	}
 
-	// ´ÓÊý¾Ý¿âÖÐ¶ÁÈ¡Ä³Ê¡ÏÂËùÓÐµÄ³ÇÊÐÐÅÏ¢
+	// ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½Ð¶ï¿½È¡Ä³Ê¡ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ³ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 	public List<City> loadCities(int provinceId) {
 		List<City> list = new ArrayList<City>();
 		Cursor cursor = db.query("City", null, "province_id = ?",
@@ -71,10 +70,10 @@ public class CoolWeatherDB {
 		return list;
 	}
 
-	// ½«provinceÊµÀý´æ´¢µ½Êý¾Ý¿â
+	// ï¿½ï¿½provinceÊµï¿½ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½
 	public void saveProvince(Province province) {
 		if (province != null) {
-			Log.d("ÕâÀïÊÇÐ´ÈëÊý¾Ý¿âµÄ·½·¨", "À´ÁË");
+			Log.d("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½Ä·ï¿½ï¿½ï¿½", "4ï¿½ï¿½");
 			ContentValues values = new ContentValues();
 			values.put("id", province.getId());
 			values.put("province_name", province.getProvinceName());
@@ -82,7 +81,7 @@ public class CoolWeatherDB {
 		}
 	}
 
-	// ´ÓÊý¾Ý¿âÖÐ¶ÁÈ¡ËùÓÐµÄÊ¡·ÝÐÅÏ¢
+	// ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½Ð¶ï¿½È¡ï¿½ï¿½ï¿½Ðµï¿½Ê¡ï¿½ï¿½ï¿½ï¿½Ï¢
 	public List<Province> loadProvinces() {
 		List<Province> list = new ArrayList<Province>();
 		Cursor cursor = db

@@ -18,7 +18,7 @@ import android.content.res.XmlResourceParser;
 import android.util.Log;
 
 /**
- * ½âÎöXML£¬»ñÈ¡³ÇÊĞ
+ * è§£æXMLï¼Œè·å–åŸå¸‚
  * 
  */
 public class CityPullParse {
@@ -27,13 +27,13 @@ public class CityPullParse {
 		// ArrayList<City> CityArray = new ArrayList<City>();
 		boolean x = false;
 		try {
-			// ¶¨Òå¹¤³§ XmlPullParserFactory
+			// å®šä¹‰å·¥å‚ XmlPullParserFactory
 			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 
-			// ¶¨Òå½âÎöÆ÷ XmlPullParser
+			// å®šä¹‰è§£æå™¨ XmlPullParser
 			XmlPullParser parser = factory.newPullParser();
 
-			// »ñÈ¡xmlÊäÈëÊı¾İ
+			// è·å–xmlè¾“å…¥æ•°æ®
 			parser.setInput(new StringReader(CityString));
 
 			x = ParseXml(parser, coolWeatherDB);
@@ -48,14 +48,14 @@ public class CityPullParse {
 		// ArrayList<City> cityArray = new ArrayList<City>();
 		boolean x = false;
 		try {
-			// ¶¨Òå¹¤³§ XmlPullParserFactory
+			// å®šä¹‰å·¥å‚ XmlPullParserFactory
 			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 
-			// ¶¨Òå½âÎöÆ÷ XmlPullParser(Òª×ª»»ÎªXmlResourceParser,·ñÔò²»ÄÜÕı³£½âÎö)
+			// å®šä¹‰è§£æå™¨ XmlPullParser(è¦è½¬æ¢ä¸ºXmlResourceParser,å¦åˆ™ä¸èƒ½æ­£å¸¸è§£æ)
 			XmlResourceParser parser = (XmlResourceParser) factory
 					.newPullParser();
 
-			// »ñÈ¡xmlÊäÈëÊı¾İ
+			// è·å–xmlè¾“å…¥æ•°æ®
 			parser.setInput(cityIS, "utf-8");
 
 			x = ParseXml(parser, coolWeatherDB);
@@ -81,28 +81,28 @@ public class CityPullParse {
 		boolean x = false;
 		boolean y = false;
 		try {
-			// ¿ªÊ¼½âÎöÊÂ¼ş
+			// å¼€å§‹è§£æäº‹ä»¶
 			int eventType = parser.getEventType();
 
-			// ´¦ÀíÊÂ¼ş£¬²»Åöµ½ÎÄµµ½áÊø¾ÍÒ»Ö±´¦Àí
+			// å¤„ç†äº‹ä»¶ï¼Œä¸ç¢°åˆ°æ–‡æ¡£ç»“æŸå°±ä¸€ç›´å¤„ç†
 			while (eventType != XmlPullParser.END_DOCUMENT) {
-				// ÒòÎª¶¨ÒåÁËÒ»¶Ñ¾²Ì¬³£Á¿£¬ËùÒÔÕâÀï¿ÉÒÔÓÃswitch
+				// å› ä¸ºå®šä¹‰äº†ä¸€å †é™æ€å¸¸é‡ï¼Œæ‰€ä»¥è¿™é‡Œå¯ä»¥ç”¨switch
 				switch (eventType) {
 				case XmlPullParser.START_DOCUMENT:
 					break;
 
 				case XmlPullParser.START_TAG:
-					// ¸øµ±Ç°±êÇ©Æğ¸öÃû×Ö
+					// ç»™å½“å‰æ ‡ç­¾èµ·ä¸ªåå­—
 					String tagName = parser.getName();
 					if (tagName.equals("province")) {
 						// provinceId =
 						// Integer.parseInt(parser.getAttributeValue(null,
-						// "id"));// »ñÈ¡province½ÚµãÊôĞÔÎªidµÄÖµ
-						// Integer.parseInt(parser.getAttributeValue(0));//µÚ¶şÖÖ·½Ê½£¨»ñÈ¡province½ÚµãÊôĞÔÎªidµÄÖµ
+						// "id"));// è·å–provinceèŠ‚ç‚¹å±æ€§ä¸ºidçš„å€¼
+						// Integer.parseInt(parser.getAttributeValue(0));//ç¬¬äºŒç§æ–¹å¼ï¼ˆè·å–provinceèŠ‚ç‚¹å±æ€§ä¸ºidçš„å€¼
 						provinceName = String.valueOf(parser.getAttributeValue(
-								null, "name"));// »ñÈ¡province½ÚµãÊôĞÔÎªnameµÄÖµ
-						Log.d("ÕâÀïÊÇxml¶ÁÈ¡³öÀ´µÄÊ¡·İµÄÃû×Ö", provinceName);
-						Log.d("ÕâÀïÊÇÊ¡·İµÄid", provinceId+"");
+								null, "name"));// è·å–provinceèŠ‚ç‚¹å±æ€§ä¸ºnameçš„å€¼
+						Log.d("è¿™é‡Œæ˜¯xmlè¯»å–å‡ºæ¥çš„çœä»½çš„åå­—", provinceName);
+						Log.d("è¿™é‡Œæ˜¯çœä»½çš„id", provinceId+"");
 						province = new Province();
 						province.setId(provinceId);
 						province.setProvinceName(provinceName);
@@ -111,7 +111,7 @@ public class CityPullParse {
 						x = true;
 					} else if (tagName.equals("item")) {
 						CityTemp = new City();
-						cityName = parser.nextText(); // ¶ÁÈ¡µÄ³ÇÊĞÃû
+						cityName = parser.nextText(); // è¯»å–çš„åŸå¸‚å
 						CityTemp.setCityName(cityName);
 						CityTemp.setProvinceId(provinceId-1);
 						coolWeatherDB.saveCity(CityTemp);
@@ -126,7 +126,7 @@ public class CityPullParse {
 					break;
 				}
 
-				// ±ğÍüÁËÓÃnext·½·¨´¦ÀíÏÂÒ»¸öÊÂ¼ş£¬ÍüÁËµÄ½á¹û¾Í³ÉËÀÑ­»·#_#
+				// åˆ«å¿˜äº†ç”¨nextæ–¹æ³•å¤„ç†ä¸‹ä¸€ä¸ªäº‹ä»¶ï¼Œå¿˜äº†çš„ç»“æœå°±æˆæ­»å¾ªç¯#_#
 				eventType = parser.next();
 			}
 		} catch (XmlPullParserException e) {
