@@ -1,14 +1,12 @@
 package com.activity;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
+import java.util.List;
 
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,15 +14,20 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.db.CoolWeatherDB;
+import com.pojo.City;
+import com.pojo.Province;
 import com.util.CharTools;
 import com.util.HttpCallbackListener;
 import com.util.HttpUtil;
 import com.util.WeatherPullParase;
 
-public class WeatherActivity extends Activity {
+public class WeatherActivity extends Activity implements OnClickListener {
 
 	private LinearLayout weatherInfoLayout;
 	private TextView cityNameText;
@@ -32,6 +35,8 @@ public class WeatherActivity extends Activity {
 	private TextView weatherDesText;
 	private TextView temperatureText;
 	private TextView currentDateText;
+	private Button switchCity;
+	private Button refreshWeather;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,12 @@ public class WeatherActivity extends Activity {
 		temperatureText = (TextView) findViewById(R.id.temperature);
 		currentDateText = (TextView) findViewById(R.id.current_date);
 		String cityName = getIntent().getStringExtra("cityName");
+		switchCity = (Button) findViewById(R.id.switch_city);
+		refreshWeather = (Button) findViewById(R.id.refresh_weather);
+		
+		CoolWeatherDB coolWeatherDB = CoolWeatherDB.getInstance(this);
+		List<City> beijing = coolWeatherDB.loadCities(1);
+		
 		Log.d("这里是一个关键的地方", cityName);
 		if (!TextUtils.isEmpty(cityName)) {
 			publishText.setText("正在同步...");
@@ -55,7 +66,27 @@ public class WeatherActivity extends Activity {
 			// 直接去本地查
 			showWeather();
 		}
+		switchCity.setOnClickListener(this);
+		refreshWeather.setOnClickListener(this);
 	}
+	
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		//更换城市
+		case R.id.switch_city:
+			Intent intent = new Intent(this,ChooseAreaActivity.class);
+			intent.putExtra("from_weather_activity", true);
+			startActivity(intent);
+			finish();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	
 
 	private void showWeather() {
 		SharedPreferences prefs = PreferenceManager

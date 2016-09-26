@@ -5,17 +5,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.db.CoolWeatherDB;
-import com.db.CoolWeatherOpenHelper;
-import com.pojo.City;
-import com.pojo.Province;
-import com.util.CityPullParse;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -24,6 +20,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.db.CoolWeatherDB;
+import com.db.CoolWeatherOpenHelper;
+import com.pojo.City;
+import com.pojo.Province;
+import com.util.CityPullParse;
 
 public class ChooseAreaActivity extends Activity {
 
@@ -44,13 +46,32 @@ public class ChooseAreaActivity extends Activity {
 	private int currentLevel;
 
 	private boolean flag;
-	private TextView textview;
 	private String fileName = "city.xml";
 	private XmlResourceParser provinceandcityParser;
+
+	/**
+	 * 是否从WeatherActivity中跳转过来。
+	 */
+	private boolean isFromWeatherActivity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		isFromWeatherActivity = getIntent().getBooleanExtra(
+				"from_weather_activity", false);
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		Log.d("isFromWeatherActivity", isFromWeatherActivity + "");
+		Log.d("city_selected", prefs.getBoolean("city_selected", false) + "");
+		if (prefs.getBoolean("city_selected", false) && isFromWeatherActivity) {
+			Log.d("切换城市", WeatherActivity.class + "");
+			Log.d("切换城市", this + "");
+			Intent intent = new Intent(ChooseAreaActivity.this,
+					ChooseAreaActivity.class);
+			startActivity(intent);
+			finish();
+			return;
+		}
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);
 		listView = (ListView) findViewById(R.id.list_view);
@@ -66,12 +87,27 @@ public class ChooseAreaActivity extends Activity {
 					long arg3) {
 				if (currentLevel == LEAVEL_PROVINCE) {
 					selectedProvince = provinceList.get(index);
-					queryCities();
+					Log.d("省份", "来了" + selectedProvince.getProvinceName());
+					if ("北京".equals(selectedProvince.getProvinceName())
+							|| "上海".equals(selectedProvince.getProvinceName())
+							|| "天津".equals(selectedProvince.getProvinceName())
+							|| "重庆".equals(selectedProvince.getProvinceName())) {
+						Log.d("直辖市", "来了" + selectedProvince.getProvinceName());
+						Intent intent = new Intent(ChooseAreaActivity.this,
+								WeatherActivity.class);
+						intent.putExtra("cityName",
+								selectedProvince.getProvinceName());
+						startActivity(intent);
+						finish();
+					} else {
+						queryCities();
+					}
 				} else if (currentLevel == LEAVEL_CITY) {
 					selectedCity = cityList.get(index);
 					String cityName = selectedCity.getCityName();
-					Intent intent = new Intent(ChooseAreaActivity.this,WeatherActivity.class);
-					intent.putExtra("cityName",cityName);
+					Intent intent = new Intent(ChooseAreaActivity.this,
+							WeatherActivity.class);
+					intent.putExtra("cityName", cityName);
 					startActivity(intent);
 					finish();
 				}
@@ -153,6 +189,7 @@ public class ChooseAreaActivity extends Activity {
 		}
 		progressDialog.show();
 	}
+
 	private void closeProgressDialog() {
 		if (progressDialog != null) {
 			progressDialog.dismiss();

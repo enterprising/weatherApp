@@ -76,8 +76,7 @@ public class WeatherPullParase {
 						if ("info".equals(nodename6)) {
 							weatherDes = nodename6_value;
 							Log.d(nodename6, nodename6_value);
-						}
-						else if ("temperature".equals(nodename6)) {
+						} else if ("temperature".equals(nodename6)) {
 							temperature = nodename6_value;
 							Log.d(nodename6, nodename6_value);
 						}
@@ -116,7 +115,8 @@ public class WeatherPullParase {
 					String citycode2 = xmlPullParser.getName();
 					cityName = xmlPullParser.nextText();
 					Log.d(citycode2, cityName);
-					xmlPullParser.require(XmlPullParser.END_TAG, null,"city_name");
+					xmlPullParser.require(XmlPullParser.END_TAG, null,
+							"city_name");
 					saveWeatherInfo(context, cityName, weatherDes, temperature,
 							publishTime, date);
 					return;
@@ -153,6 +153,7 @@ public class WeatherPullParase {
 		editor.putString("publish_time", publishTime);
 		editor.putString("current_date", sdf.format(new Date()));
 		Log.d("这里是存储数据cityName", cityName);
+		Log.d("这里是存储数据city_selected", cityName);
 		editor.commit();
 	}
 }

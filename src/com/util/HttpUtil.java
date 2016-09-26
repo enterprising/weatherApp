@@ -26,7 +26,7 @@ public class HttpUtil {
 					connection.setConnectTimeout(8000);
 					connection.setDoInput(true);
 					connection.setDoOutput(true);
-					InputStream in = connection.getInputStream(); // ��ȡ������ص�������
+					InputStream in = connection.getInputStream(); 
 					BufferedReader reader = new BufferedReader(
 							new InputStreamReader(in));
 					response = new StringBuilder();
