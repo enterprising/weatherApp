@@ -1,7 +1,6 @@
 package com.activity;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -13,15 +12,12 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.db.CoolWeatherDB;
-import com.pojo.City;
-import com.pojo.Province;
 import com.util.CharTools;
 import com.util.HttpCallbackListener;
 import com.util.HttpUtil;
@@ -52,10 +48,7 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		String cityName = getIntent().getStringExtra("cityName");
 		switchCity = (Button) findViewById(R.id.switch_city);
 		refreshWeather = (Button) findViewById(R.id.refresh_weather);
-		
-		CoolWeatherDB coolWeatherDB = CoolWeatherDB.getInstance(this);
-		List<City> beijing = coolWeatherDB.loadCities(1);
-		
+
 		Log.d("这里是一个关键的地方", cityName);
 		if (!TextUtils.isEmpty(cityName)) {
 			publishText.setText("正在同步...");
@@ -69,31 +62,41 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		switchCity.setOnClickListener(this);
 		refreshWeather.setOnClickListener(this);
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		//更换城市
+		// 更换城市
 		case R.id.switch_city:
-			Intent intent = new Intent(this,ChooseAreaActivity.class);
+			Intent intent = new Intent(this, ChooseAreaActivity.class);
 			intent.putExtra("from_weather_activity", true);
 			startActivity(intent);
 			finish();
 			break;
-
+		case R.id.refresh_weather:
+			publishText.setText("同步中...");
+			SharedPreferences prefs = PreferenceManager
+					.getDefaultSharedPreferences(this);
+			String cityName = prefs.getString("city_name", "");
+			if (!TextUtils.isEmpty(cityName)) {
+				queryWeather(cityName);
+			}
+			break;
 		default:
 			break;
 		}
 	}
-
-	
 
 	private void showWeather() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		cityNameText.setText(prefs.getString("city_name", ""));
 		weatherDesText.setText(prefs.getString("weatherDes", ""));
-		publishText.setText("今天" + prefs.getString("publish_time", "") + "发布");
+		String publishTime = prefs.getString("publish_time", "");
+		String[] publishTime2 = publishTime.split(":");
+		String publishTime_main = publishTime2[0]+":"+publishTime2[1];
+		Log.d("发布时间233333", publishTime_main);
+		publishText.setText("今天" + publishTime_main + "发布");
 		temperatureText.setText(prefs.getString("temperature", ""));
 		currentDateText.setText(prefs.getString("current_date", ""));
 		weatherInfoLayout.setVisibility(View.VISIBLE);
@@ -106,8 +109,8 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		String UriCityname = charTools.Utf8URLencode(cityName);
 		String address = "http://api.avatardata.cn/Weather/Query?dtype=xml&key="
 				+ appkey + "&cityname=" + UriCityname;
-		
-		Log.d("地址", address+"");
+
+		Log.d("地址", address + "");
 		queryWeatherFromServer(address);
 	}
 
@@ -127,10 +130,8 @@ public class WeatherActivity extends Activity implements OnClickListener {
 						}
 					});
 				} catch (XmlPullParserException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
